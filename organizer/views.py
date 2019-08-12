@@ -1,19 +1,22 @@
 from django.urls import reverse_lazy
 from django.shortcuts import (
     get_object_or_404, redirect, render)
-from django.views.generic import View
+from django.views.generic import (
+    CreateView, DeleteView,
+    DetailView, UpdateView, View)
 
 from .forms import (
     NewsLinkForm, StartupForm, TagForm)
 from .models import NewsLink, Startup, Tag
-from .utils import (
-    ObjectCreateMixin, ObjectDeleteMixin,
-    ObjectUpdateMixin)
+# from .utils import (
+#     CreateView, ObjectDeleteMixin,
+#     ObjectUpdateMixin)
+
 
 from django.core.paginator import Paginator
 
 
-class NewsLinkCreate(ObjectCreateMixin, View):
+class NewsLinkCreate(CreateView):
     form_class = NewsLinkForm
     template_name = 'organizer/newslink_form.html'
 
@@ -72,12 +75,12 @@ class NewsLinkUpdate(View):
                 context)
 
 
-class StartupCreate(ObjectCreateMixin, View):
+class StartupCreate(CreateView):
     form_class = StartupForm
     template_name = 'organizer/startup_form.html'
 
 
-class StartupDelete(ObjectDeleteMixin, View):
+class StartupDelete(DeleteView):
     model = Startup
     success_url = reverse_lazy(
         'organizer_startup_list')
@@ -85,13 +88,10 @@ class StartupDelete(ObjectDeleteMixin, View):
         'organizer/startup_confirm_delete.html')
 
 
-def startup_detail(request, slug):
-    startup = get_object_or_404(
-        Startup, slug__iexact=slug)
-    return render(
-        request,
-        'organizer/startup_detail.html',
-        {'startup': startup})
+class StartupDetail(DetailView):
+    model = Startup
+
+
 
 
 class StartupList(View):
@@ -112,19 +112,19 @@ class StartupList(View):
             request, self.template_name, context)
 
 
-class StartupUpdate(ObjectUpdateMixin, View):
+class StartupUpdate(UpdateView):
     form_class = StartupForm
     model = Startup
     template_name = (
         'organizer/startup_form_update.html')
 
 
-class TagCreate(ObjectCreateMixin, View):
+class TagCreate(CreateView):
     form_class = TagForm
     template_name = 'organizer/tag_form.html'
 
 
-class TagDelete(ObjectDeleteMixin, View):
+class TagDelete(DeleteView):
     model = Tag
     success_url = reverse_lazy(
         'organizer_tag_list')
@@ -132,23 +132,64 @@ class TagDelete(ObjectDeleteMixin, View):
         'organizer/tag_confirm_delete.html')
 
 
-def tag_detail(request, slug):
-    tag = get_object_or_404(
-        Tag, slug__iexact=slug)
-    return render(
-        request,
-        'organizer/tag_detail.html',
-        {'tag': tag})
+class TagDetail(DetailView):
+    model = Tag
 
 
-def tag_list(request):
-    return render(
-        request,
-        'organizer/tag_list.html',
-        {'tag_list': Tag.objects.all()})
+class TagList(View):
+    template_name = 'organizer/tag_list.html'
+    def get(self, request):
+        tags = Tag.objects.all()
+        context = {
+            'tag_list': tags,
+        }
+        return render(
+            request, self.template_name, context)
+
+class TagPageList(View):
+    paginate_by = 5
+    template_name = 'organizer/tag_list.html'
+
+    def get(self, request, page_number):
+        tags = Tag.objects.all()
+        paginator = Paginator(
+            tags, self.paginate_by)
+        try:
+            page = paginator.page(page_number)
+        except PageNotAnInteger:
+            page = paginator.page(1)
+        except EmptyPage:
+            page = paginator.page(
+                paginator.num_pages)
+        if page.has_previous():
+            prev_url = reverse(
+                'organizer_tag_page',
+                args=(
+                    page.previous_page_number(),
+                ))
+        else:
+            prev_url = None
+        if page.has_next():
+            next_url = reverse(
+                'organizer_tag_page',
+                args=(
+                    page.next_page_number(),
+                ))
+        else:
+            next_url = None
+        context = {
+            'is_paginated':
+                page.has_other_pages(),
+            'next_page_url': next_url,
+            'paginator': paginator,
+            'previous_page_url': prev_url,
+            'tag_list': page,
+        }
+        return render(
+            request, self.template_name, context)
 
 
-class TagUpdate(ObjectUpdateMixin, View):
+class TagUpdate(UpdateView):
     form_class = TagForm
     model = Tag
     template_name = (
