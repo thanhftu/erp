@@ -1,31 +1,29 @@
-from django.conf.urls import url
+from django.urls import path
 
-from .views import (
+from .views import (PostArchiveYear,MonthArchiveView,
     PostCreate, PostDelete, PostList, PostUpdate,
-    post_detail)
+    PostDetail)
 
 urlpatterns = [
-    url(r'^$',
+    path('',
         PostList.as_view(),
         name='blog_post_list'),
-    url(r'^create/$',
+    path('create/',
         PostCreate.as_view(),
         name='blog_post_create'),
-    url(r'^(?P<year>\d{4})/'
-        r'(?P<month>\d{1,2})/'
-        r'(?P<slug>[\w\-]+)/$',
-        post_detail,
+        path('<year>/<month>/',
+                MonthArchiveView.as_view(),
+                name='blog_post_archive_month'),
+    path('<year>/',
+            PostArchiveYear.as_view(),
+            name='blog_post_archive_year'),
+    path('<year>/<month>/<slug>/',
+        PostDetail.as_view(),
         name='blog_post_detail'),
-    url(r'^(?P<year>\d{4})/'
-        r'(?P<month>\d{1,2})/'
-        r'(?P<slug>[\w\-]+)/'
-        r'delete/$',
+    path('<year>\d{4}/<month>\d{1,2}/<slug>/update/delete/',
         PostDelete.as_view(),
         name='blog_post_delete'),
-    url(r'^(?P<year>\d{4})/'
-        r'(?P<month>\d{1,2})/'
-        r'(?P<slug>[\w\-]+)/'
-        r'update/$',
+    path('<year>\d{4}/<month>\d{1,2}/<slug>/update/',
         PostUpdate.as_view(),
         name='blog_post_update'),
 ]

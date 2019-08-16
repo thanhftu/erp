@@ -8,6 +8,8 @@ from organizer.urls import (
     startup as startup_urls, tag as tag_urls)
 
 from .views import redirect_root
+from django.views.generic import (RedirectView, TemplateView)
+from user import urls as user_urls
 
 urlpatterns = [
     path('', redirect_root),
@@ -17,4 +19,10 @@ urlpatterns = [
     path('newslink/', include(newslink_urls)),
     path('startup/', include(startup_urls)),
     path('tag/', include(tag_urls)),
+    path('about/',
+        TemplateView.as_view(
+            template_name='site/about.html'), name='about_site'),
+    path('user/', include(
+                        user_urls,
+                        namespace='dj-auth')),
 ]

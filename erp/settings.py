@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'organizer.apps.OrganizerConfig',
     'contact.apps.ContactConfig',
     'blog.apps.BlogConfig',
+    'user.apps.UserConfig',
+    
 ]
 
 MIDDLEWARE = [
@@ -87,10 +89,47 @@ DATABASES = {
         }
 }
 
+# Logging
+# https://docs.djangoproject.com/en/2.2/topics/logging/
 
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-
+# from .log_filters import ManagementFilter
+#
+# verbose = (
+#     "[%(asctime)s] %(levelname)s "
+#     "[%(name)s:%(lineno)s] %(message)s")
+#
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'filters': {
+#         'remove_migration_sql': {
+#             '()': ManagementFilter,
+#         },
+#     },
+#     'handlers': {
+#         'console': {
+#             'filters': ['remove_migration_sql'],
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'formatters': {
+#         'verbose': {
+#             'format': verbose,
+#             'datefmt': "%Y-%b-%d %H:%M:%S"
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'formatter': 'verbose'
+#         },
+#     },
+# }
+#
+# # Password validation
+# # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
+#
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -126,3 +165,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+# Login Settings
+# https://docs.djangoproject.com/en/1.8/topics/auth/
+from django.urls import reverse_lazy
+
+LOGIN_REDIRECT_URL = reverse_lazy('blog_post_list')
+LOGIN_URL = reverse_lazy('dj-auth:login')
+LOGOUT_URL = reverse_lazy('dj-auth:logout')
