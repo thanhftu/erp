@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (PostArchiveYear,MonthArchiveView,
+from .views import (PostArchiveYear,PostArchiveMonth,
     PostCreate, PostDelete, PostList, PostUpdate,
     PostDetail)
 
@@ -11,9 +11,9 @@ urlpatterns = [
     path('create/',
         PostCreate.as_view(),
         name='blog_post_create'),
-        path('<year>/<month>/',
-                MonthArchiveView.as_view(),
-                name='blog_post_archive_month'),
+    path('<year>/<month>/',
+            PostArchiveMonth.as_view(),
+            name='blog_post_archive_month'),
     path('<year>/',
             PostArchiveYear.as_view(),
             name='blog_post_archive_year'),
