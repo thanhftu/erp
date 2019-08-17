@@ -1,11 +1,15 @@
-from django.urls import path, include, reverse_lazy
+from django.urls import include, path
 from django.contrib.auth import \
     views as auth_views
 from django.contrib.auth.forms import \
     AuthenticationForm
-from django.views.generic import (RedirectView,TemplateView)
+from django.urls import reverse_lazy
+from django.views.generic import (
+    RedirectView, TemplateView)
+
 from .views import (
-    DisableAccount, ActivateAccount, CreateAccount, ResendActivationEmail)
+    ActivateAccount, CreateAccount,
+    DisableAccount, ResendActivationEmail)
 
 password_urls = [
     path('change/',
@@ -72,5 +76,5 @@ urlpatterns = [
         {'extra_context':
              {'form': AuthenticationForm}},
         name='logout'),
-    path('password/', include(password_urls))
+    path('password/', include(password_urls)),
 ]

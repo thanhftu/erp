@@ -4,6 +4,7 @@ from logging import CRITICAL, ERROR
 from smtplib import SMTPException
 
 from django.conf import settings
+from django.contrib.auth import get_user
 from django.contrib.auth.tokens import \
     default_token_generator as token_generator
 from django.contrib.sites.shortcuts import \
@@ -152,9 +153,9 @@ class ActivationMailFormMixin:
 
 
 class MailContextViewMixin:
-    email_template_name = 'registration/email_create.txt'
+    email_template_name = 'user/email_create.txt'
     subject_template_name = (
-        'registration/subject_create.txt')
+        'user/subject_create.txt')
 
     def get_save_kwargs(self, request):
         return {
@@ -164,3 +165,10 @@ class MailContextViewMixin:
             'subject_template_name':
                 self.subject_template_name,
         }
+
+
+class ProfileGetObjectMixin:
+
+    def get_object(self, queryset=None):
+        current_user = get_user(self.request)
+        return current_user.profile
