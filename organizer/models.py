@@ -31,7 +31,9 @@ class Tag(models.Model):
     def get_update_url(self):
         return reverse('organizer_tag_update',
                        kwargs={'slug': self.slug})
-
+    def published_posts(self):
+        return self.blog_posts.filter(
+            pub_date__lt=date.today())
 
 class Startup(models.Model):
     name = models.CharField(

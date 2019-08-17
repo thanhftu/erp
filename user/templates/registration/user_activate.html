@@ -1,14 +1,13 @@
 {% extends parent_template|default:"registration/base_user.html" %}
 
 {% block title %}
-{{ block.super }} - Logged Out
+{{ block.super }} - Account Activation Failed
 {% endblock %}
 
 {% block content %}
   <div class="row">
     <div class="offset-by-two eight columns">
-      <p>You've successfully logged out.</p>
-      {% include "registration/login_form.html" with login_button='Log Back In' %}
+      <p>This activation link is no longer valid.</p>
     </div>
   </div>
 {% endblock %}

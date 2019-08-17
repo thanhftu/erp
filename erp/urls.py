@@ -22,7 +22,5 @@ urlpatterns = [
     path('about/',
         TemplateView.as_view(
             template_name='site/about.html'), name='about_site'),
-    path('user/', include(
-                        user_urls,
-                        namespace='dj-auth')),
+    path('user/', include(user_urls,namespace='dj-auth')),
 ]
