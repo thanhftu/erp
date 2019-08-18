@@ -88,14 +88,24 @@ WSGI_APPLICATION = 'erp.wsgi.application'
 
 DATABASES = {
      'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'erpdb',
-        'USER': 'postgres',
-        'PASSWORD': 'Donga130',
-        'HOST': 'localhost',
-        'POST': '5432',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         }
 }
+
+DATABASES['default']=dj_database_url.config(default='postgres://lebpcgngpefxti:3a9a738f7e1a1c391c61a8620c0b9a3d9e85c64732f746076105d68b785e4543@ec2-23-21-186-85.compute-1.amazonaws.com:5432/d3p96bb2v5foef')
+db_from_env=dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
+
+# DATABASES = {
+#      'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'erpdb',
+#         'USER': 'postgres',
+#         'PASSWORD': 'Donga130',
+#         'HOST': 'localhost',
+#         'POST': '5432',
+#         }
+# }
 
 # Logging
 # https://docs.djangoproject.com/en/2.2/topics/logging/
